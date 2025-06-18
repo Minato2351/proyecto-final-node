@@ -1,4 +1,4 @@
-require('dotenv').config();
+const functions = require('firebase-functions');
 const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
@@ -7,22 +7,17 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors({ origin: 'http://localhost:4200' }));
+app.use(cors({ origin: true }));
 
-// Inicializa Firebase Admin usando una variable de entorno
-const serviceAccount = JSON.parse(process.env.FIREBASE_KEY);
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+// Inicializa Firebase Admin automáticamente (sin archivo json)
+admin.initializeApp();
 
 const db = admin.firestore();
-app.set('db', db); // Lo agregamos al app para que esté disponible en las rutas
+app.set('db', db);
 
 // Rutas
 app.use('/', require('./routes/paypal'));
 app.use('/api', require('./routes/usuarios'));
 
-// Levantar servidor
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Server iniciado en el puerto ${PORT}`));
+// Exporta como función HTTP
+exports.api = functions.https.onRequest(app);
