@@ -19,7 +19,7 @@ app.use('/', require('./routes/paypal'));
 app.use('/api', require('./routes/usuarios'));
 
 // Escucha en el puerto asignado por Render
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
