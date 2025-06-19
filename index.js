@@ -1,17 +1,16 @@
-const functions = require('firebase-functions');
 const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
 
+// Inicializa Express
 const app = express();
 
 // Middleware
 app.use(express.json());
 app.use(cors({ origin: true }));
 
-// Inicializa Firebase Admin automáticamente (sin archivo json)
-admin.initializeApp();
-
+// Inicializa Firebase Admin
+admin.initializeApp(); // Esto funciona si estás usando las variables de entorno en Render
 const db = admin.firestore();
 app.set('db', db);
 
@@ -19,5 +18,8 @@ app.set('db', db);
 app.use('/', require('./routes/paypal'));
 app.use('/api', require('./routes/usuarios'));
 
-// Exporta como función HTTP
-exports.api = functions.https.onRequest(app);
+// Escucha en el puerto asignado por Render
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
+});
